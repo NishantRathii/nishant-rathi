@@ -157,3 +157,31 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
   });
 }
+
+
+
+// send contact form (Formspree) without leaving the page
+form.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  formBtn.setAttribute("disabled", "");
+  const label = formBtn.querySelector("span");
+  label.textContent = "Sending...";
+  try {
+    const res = await fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { Accept: "application/json" }
+    });
+    if (res.ok) {
+      label.textContent = "Message sent!";
+      form.reset();
+    } else {
+      label.textContent = "Something went wrong";
+      formBtn.removeAttribute("disabled");
+    }
+  } catch (err) {
+    label.textContent = "Something went wrong";
+    formBtn.removeAttribute("disabled");
+  }
+  setTimeout(function () { label.textContent = "Send Message"; }, 3000);
+});
